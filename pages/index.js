@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Card } from 'semantic-ui-react';
 import factory from '../ethereum/factory';
 
 class CampaignIndex extends Component {
@@ -8,8 +9,28 @@ class CampaignIndex extends Component {
     return { campaigns };
   }
 
+  renderCampaigns = () => {
+    const items = this.props.campaigns.map(address => {
+      return {
+        header: address,
+        description: <a>View Campaign</a>,
+        fluid: true,
+      };
+    });
+
+    return <Card.Group items={items} />;
+  };
+
   render() {
-    return <div>First Address: {this.props.campaigns[0]}</div>;
+    return (
+      <div>
+        <link
+          rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.12/semantic.min.css"
+        />
+        {this.renderCampaigns()}
+      </div>
+    );
   }
 }
 
