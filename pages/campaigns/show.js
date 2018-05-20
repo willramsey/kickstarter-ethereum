@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Card } from 'semantic-ui-react';
 import Layout from '../../components/Layout';
 import campaignInstance from '../../ethereum/campaign';
+import web3 from '../../ethereum/web3';
 
 class CampaignShow extends Component {
   static async getInitialProps(props) {
@@ -34,6 +35,30 @@ class CampaignShow extends Component {
         description:
           'The manager is the person who created this campaign. They can create requests to withdraw funds.',
         style: { overflowWrap: 'break-word' },
+      },
+      {
+        header: minimumContribution,
+        meta: 'Minimum Contribution (wei)',
+        description:
+          'You must contribute at least this much wei to become an approver.',
+      },
+      {
+        header: numRequests,
+        meta: 'Number of Requests',
+        description:
+          'A request is made by the manager in order to withdraw funds from the contract. Requests must be approved by a majority of the approvers.',
+      },
+      {
+        header: numApprovers,
+        meta: 'Number of Approvers',
+        description:
+          'Approvers are those who have contributed to this campaign.',
+      },
+      {
+        header: web3.utils.fromWei(balance, 'ether'),
+        meta: 'Campaign Balance (ether)',
+        description:
+          'The current balance is how much money this campaign has left to spend.',
       },
     ];
 
