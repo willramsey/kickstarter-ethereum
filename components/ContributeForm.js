@@ -5,7 +5,7 @@ import web3 from '../ethereum/web3';
 import { Router } from '../routes';
 
 class ContributeForm extends Component {
-  state = { value: '', isLoading: false };
+  state = { value: '', isLoading: false, errorMessage: '' };
 
   handleChange = event => {
     this.setState({ value: event.target.value });
@@ -18,6 +18,7 @@ class ContributeForm extends Component {
 
     const campaign = getCampaign(address);
 
+    this.setState({ isLoading: true, errorMessage: '' });
     try {
       const accounts = await web3.eth.getAccounts();
       await campaign.methods.contribute().send({
@@ -27,13 +28,17 @@ class ContributeForm extends Component {
 
       Router.replaceRoute(`/campaigns/${address}`);
     } catch (err) {
-      console.log('err', err);
+      this.setState({ errorMessage: err.message.split('\n')[0] });
+      console.log('err', err.message);
     }
+    this.setState({ isLoading: false });
   };
 
   render() {
+    const { isLoading, errorMessage } = this.state;
+
     return (
-      <Form onSubmit={this.handleSubmit}>
+      <Form onSubmit={this.handleSubmit} error={!!errorMessage}>
         <Form.Field>
           <label>Amount to Contribute</label>
           <Input
@@ -42,7 +47,10 @@ class ContributeForm extends Component {
             labelPosition="right"
           />
         </Form.Field>
-        <Button primary>Contribute!</Button>
+        <Message error header="Uh oh!" content={errorMessage} />
+        <Button primary loading={isLoading}>
+          Contribute!
+        </Button>
       </Form>
     );
   }
